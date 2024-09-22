@@ -1,0 +1,28 @@
+FROM ubuntu:18.04
+
+RUN mkdir -p /my_app
+
+RUN apt-get update && \
+    apt-get install -y python3-pip && \
+    apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    gnupg && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    python3 -m pip install --upgrade pip && \
+    apt-get purge -y python3-pip && \
+    apt-get autoremove -y && \
+    apt-get clean
+
+RUN apt-get update && apt-get install python3-pip -y
+
+RUN pip install requests
+
+ADD Test_Content_API.py /my_app/Test_Content_API.py
+
+WORKDIR /my_app/
+
+EXPOSE 8000
+
+CMD python3 Test_Content_API.py
